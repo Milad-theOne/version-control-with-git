@@ -1,116 +1,62 @@
-# راهنمای خصوصی مدرس — جلسه سوم Git
 
-**Session 03 — Branching & Merging**
+# جلسه ۳ — کار با Branch و Merge
 
-**مدت کلاس:** ۶۰ دقیقه  
-**مخاطب:** دانشجویان مبتدی کامپیوتر  
-**محیط:** Windows + PowerShell + Notepad  
-**سناریو:** ادامه Repository جلسات اول و دوم  
-**محل نگهداری:** Obsidian — یادداشت خصوصی مدرس
+**Git Branching & Merging | Session 03**
 
----
+در جلسه اول با Repository و Commit آشنا شدیم و در جلسه دوم History، Diff و Undo رو تمرین کردیم.
 
-## ۰. هدف جلسه
-
-در پایان این جلسه دانشجو باید بتواند:
-
-1. توضیح دهد Branch چیست و چرا از آن استفاده می‌کنیم.
-2. تفاوت Branch و Commit را بداند.
-3. مفهوم اولیه HEAD را درک کند.
-4. Branchهای موجود را مشاهده کند.
-5. یک Branch جدید ایجاد کند.
-6. بین Branchها جابه‌جا شود.
-7. روی Branch جدید تغییر ایجاد کند و Commit بزند.
-8. به Branch اصلی برگردد و تفاوت فایل‌ها را مشاهده کند.
-9. با Merge تغییرات را به Branch اصلی منتقل کند.
-10. History نهایی را بررسی کند.
-
-**نکته مدرس:** در این جلسه فقط Fast-forward Merge را به‌صورت عملی آموزش می‌دهیم. Merge Conflict و روش حل آن در جلسه پنجم بررسی می‌شود.
+حالا می‌خوایم بدون تغییر مستقیم Branch اصلی، روی یک مسیر جداگانه کار کنیم و بعد تغییرات رو به Branch اصلی برگردونیم.
 
 ---
 
-# ۱. برنامه زمانی کلاس
+## اهداف یادگیری
 
-| زمان | موضوع |
-|---|---|
-| دقیقه ۰ تا ۵ | آماده‌سازی سیستم |
-| دقیقه ۵ تا ۱۲ | مرور جلسه دوم |
-| دقیقه ۱۲ تا ۲۰ | مفهوم Branch و HEAD |
-| دقیقه ۲۰ تا ۳۰ | ساخت Branch و جابه‌جایی |
-| دقیقه ۳۰ تا ۴۱ | ویرایش فایل و Commit |
-| دقیقه ۴۱ تا ۵۱ | برگشت به main و Merge |
-| دقیقه ۵۱ تا ۵۷ | تمرین و بررسی History |
-| دقیقه ۵۷ تا ۶۰ | جمع‌بندی |
+در پایان جلسه می‌تونیم:
+
+- توضیح بدیم Branch چیه و چه کاربردی داره.
+- تفاوت Branch، Commit و HEAD رو تشخیص بدیم.
+- با `git branch`، Branchها رو ببینیم و Branch جدید بسازیم.
+- با `git switch` بین Branchها جابه‌جا بشیم.
+- روی Branch جدید تغییر ایجاد کنیم و Commit بزنیم.
+- با `git merge` یک Fast-forward Merge انجام بدیم.
+- نتیجه رو با `git log --oneline --graph --all --decorate` بررسی کنیم.
 
 ---
 
-# ۲. آماده‌سازی سیستم — دقیقه ۰ تا ۵
+# ۱. آماده‌سازی Repository
 
-## قدم اول: باز کردن Repository
+در Windows وارد پوشه پروژه جلسه قبل شو:
 
-به دانشجوها بگو:
+```text
+Desktop/
+└── Git-Class/
+    └── git-first-project/
+        └── about-me.txt
+```
 
-«اول وارد همون پروژه‌ای می‌شیم که در دو جلسه قبل ساختیم. امروز پروژه جدیدی ایجاد نمی‌کنیم.»
+در نوار آدرس File Explorer بنویس `powershell` و Enter بزن.
 
-در Windows:
-
-1. برنامه File Explorer را باز کنید.
-2. وارد پوشه `Git-Class` شوید.
-3. پوشه `git-first-project` را باز کنید.
-4. روی نوار آدرس File Explorer کلیک کنید.
-5. عبارت `powershell` را بنویسید.
-6. Enter بزنید.
-
-اکنون PowerShell باید در مسیر Repository باز شده باشد.
-
-### دستور اول
+ابتدا مسیر، فایل‌ها و وضعیت Git رو بررسی کن:
 
 ```powershell
 Get-Location
-```
-
-**هدف:** بررسی مسیر فعلی.
-
-### دستور دوم
-
-```powershell
 git --version
-```
-
-**هدف:** اطمینان از نصب Git.
-
-### دستور سوم
-
-```powershell
+Get-ChildItem -Name
 git status
 ```
 
-خروجی نمونه:
+اگر Repository آماده و بدون تغییر ثبت‌نشده باشه، خروجی `git status` شبیه اینه:
 
 ```text
 On branch main
 nothing to commit, working tree clean
 ```
 
-**توضیح مدرس:**
+ممکنه Branch اصلی سیستم تو `master` باشه. در این راهنما از `main` استفاده می‌کنیم؛ اگر نام Branch اصلی تو فرق داره، از نام واقعی اون استفاده کن.
 
-«قبل از انجام هر کاری، وضعیت Repository رو بررسی می‌کنیم. می‌خوایم مطمئن بشیم تغییرات ثبت‌نشده‌ای نداریم که موقع جابه‌جایی بین Branchها مشکل ایجاد کنن.»
+> ⚠️ اگر تغییرات ثبت‌نشده مهمی داری، قبل از ادامه بررسی‌شون کن. هیچ تغییری رو بدون اطمینان حذف نکن.
 
-اگر فایل تغییرکرده‌ای وجود داشت، بدون بررسی آن را حذف نکن.
-
-### دستور چهارم
-
-```powershell
-Get-ChildItem -Name
-```
-
-باید فایل تمرینی را ببینیم:
-
-```text
-about-me.txt
-```
-
-### دستور پنجم
+فایل تمرینی رو مشاهده کن:
 
 ```powershell
 Get-Content .\about-me.txt
@@ -125,75 +71,11 @@ Favorite Language: Python
 Goal: Learn Git
 ```
 
-محتوای واقعی دانشجو ممکن است متفاوت باشد.
-
 ---
 
-# ۳. مرور جلسه دوم — دقیقه ۵ تا ۱۲
+# ۲. Branch چیست؟
 
-## چه چیزی بگویم؟
-
-«در جلسه قبل یاد گرفتیم چطور History پروژه رو ببینیم، تغییرات فایل رو بررسی کنیم و تغییرات اشتباهی رو مدیریت کنیم.»
-
-دستورات مروری:
-
-```powershell
-git log --oneline
-```
-
-```powershell
-git diff
-```
-
-```powershell
-git diff --staged
-```
-
-```powershell
-git status
-```
-
-از دانشجوها بپرس:
-
-**سؤال اول:** Commit چیست؟
-
-پاسخ مورد انتظار:
-
-«Commit یک Snapshot ثبت‌شده از وضعیت پروژه است.»
-
-**سؤال دوم:** آیا Git فقط آخرین نسخه فایل‌ها را نگه می‌دارد؟
-
-پاسخ:
-
-«خیر، Git تاریخچه Commitها را نگه می‌دارد و امکان بررسی نسخه‌های قبلی را فراهم می‌کند.»
-
-## ورود به موضوع جدید
-
-بگو:
-
-«فرض کنید روی یک پروژه دانشگاهی کار می‌کنیم. پروژه فعلاً سالمه، ولی می‌خوایم یک قابلیت جدید بهش اضافه کنیم.»
-
-«اگر قابلیت جدید هنوز کامل نشده باشه، بهتره مستقیم روی نسخه اصلی پروژه کار کنیم یا یک مسیر جدا برای توسعه داشته باشیم؟»
-
-بعد توضیح بده که Git برای این مسئله Branch دارد.
-
----
-
-# ۴. مفهوم Branch — دقیقه ۱۲ تا ۲۰
-
-## Branch چیست؟
-
-تعریف علمی:
-
-**Branch در Git یک اشاره‌گر قابل‌حرکت به یک Commit است.**
-
-تعریف ساده برای کلاس:
-
-«Branch به ما اجازه می‌ده روی یک مسیر توسعه جداگانه کار کنیم، بدون اینکه مجبور باشیم تغییرات جدید رو مستقیم روی Branch اصلی ثبت کنیم.»
-
-## مثال روی تخته
-
-فرض کنیم پروژه سه Commit دارد:
+فرض کن پروژه سه Commit داره:
 
 ```text
 C1 --- C2 --- C3
@@ -201,18 +83,21 @@ C1 --- C2 --- C3
               main
 ```
 
-اکنون یک Branch جدید ایجاد می‌کنیم:
+می‌خوایم قابلیت جدیدی رو آزمایش کنیم، اما نمی‌خوایم Commitهای آزمایشی رو مستقیم روی `main` ثبت کنیم.
+
+**Branch در Git یک اشاره‌گر قابل‌حرکت به Commit است.** با Branch می‌تونیم یک مسیر توسعه جداگانه داشته باشیم.
+
+وقتی Branch جدید رو می‌سازیم، هنوز Commit جدیدی ایجاد نشده و هر دو Branch به یک Commit اشاره می‌کنن:
 
 ```text
+                 main
+                  |
 C1 --- C2 --- C3
-               | \
-               |  feature-profile
-              main
+                  |
+             feature-profile
 ```
 
-**توضیح مهم:** در لحظه ساخت Branch، هر دو اشاره‌گر به یک Commit اشاره می‌کنند. هنوز Commit جدیدی ساخته نشده است.
-
-حالا روی Branch جدید یک Commit ایجاد می‌کنیم:
+بعد از ایجاد یک Commit روی Branch جدید:
 
 ```text
 C1 --- C2 --- C3 --- F1
@@ -220,54 +105,20 @@ C1 --- C2 --- C3 --- F1
               main  feature-profile
 ```
 
-اینجا `main` همچنان به C3 اشاره می‌کند، ولی `feature-profile` به F1 منتقل شده است.
+**نکته:** Branch کپی مستقل از کل پوشه پروژه نیست؛ یک اشاره‌گر در History گیت است.
 
-## تفاوت Branch و Commit
+## تفاوت مفاهیم
 
-| مفهوم | تعریف |
+| مفهوم | معنی |
 |---|---|
-| Commit | Snapshot ثبت‌شده از پروژه |
+| Commit | یک Snapshot ثبت‌شده از پروژه |
 | Branch | اشاره‌گر قابل‌حرکت به Commit |
 | main | نام رایج Branch اصلی |
-| HEAD | نشان‌دهنده موقعیت فعلی در Git |
-
-## HEAD چیست؟
-
-به دانشجوها بگو:
-
-«HEAD به Git می‌گه الان روی کدوم موقعیت از History قرار داریم. در حالت معمول HEAD به Branch فعلی اشاره می‌کنه.»
-
-مثال:
-
-```text
-HEAD
- |
- v
-main
- |
- v
- C3
-```
-
-اگر به Branch جدید برویم:
-
-```text
-HEAD
- |
- v
-feature-profile
- |
- v
- C3
-```
-
-فعلاً وارد Detached HEAD نشو.
+| HEAD | نشان‌دهنده موقعیت فعلی Git؛ معمولاً به Branch فعلی اشاره می‌کند |
 
 ---
 
-# ۵. مشاهده Branchها — دقیقه ۲۰ تا ۲۳
-
-## دستور اول
+# ۳. مشاهده Branchها
 
 ```powershell
 git branch
@@ -279,29 +130,17 @@ git branch
 * main
 ```
 
-توضیح بده:
-
-«علامت ستاره نشون می‌ده الان روی کدوم Branch هستیم.»
-
-ممکن است نام Branch اصلی `master` باشد.
-
-**نکته مدرس:** اگر خروجی دانشجو `master` بود، در مراحل برگشت و Merge از همان نام استفاده کند.
+علامت `*` یعنی الان روی این Branch هستیم.
 
 ---
 
-# ۶. ساخت Branch جدید — دقیقه ۲۳ تا ۲۷
-
-## دستور دوم
+# ۴. ساخت Branch جدید
 
 ```powershell
 git branch feature-profile
 ```
 
-بگو:
-
-«با این دستور یک Branch به نام feature-profile می‌سازیم.»
-
-حالا:
+دوباره Branchها رو ببین:
 
 ```powershell
 git branch
@@ -314,25 +153,22 @@ git branch
 * main
 ```
 
-## نکته مهم
+**دقت کن:** ساخت Branch جدید باعث جابه‌جایی خودکار به اون نمی‌شه.
 
-از دانشجوها بپرس:
+### ⚡ سؤال سریع
 
-«آیا الان روی Branch جدید هستیم؟»
+آیا دستور `git branch feature-profile` یک Commit جدید هم ایجاد می‌کنه؟
 
-پاسخ: خیر.
+<details>
+<summary>نمایش پاسخ</summary>
 
-چون علامت `*` هنوز کنار `main` است.
+خیر. این دستور فقط یک Branch جدید ایجاد می‌کنه که ابتدا به همون Commit فعلی اشاره داره.
 
-**نکته‌ای که باید تأکید کنی:**
-
-دستور `git branch` در این حالت فقط Branch را می‌سازد و ما را به آن منتقل نمی‌کند.
+</details>
 
 ---
 
-# ۷. جابه‌جایی بین Branchها — دقیقه ۲۷ تا ۳۰
-
-## دستور سوم
+# ۵. جابه‌جایی بین Branchها
 
 ```powershell
 git switch feature-profile
@@ -344,7 +180,7 @@ git switch feature-profile
 Switched to branch 'feature-profile'
 ```
 
-حالا:
+برای بررسی:
 
 ```powershell
 git branch
@@ -357,106 +193,81 @@ git branch
   main
 ```
 
-توضیح بده:
+حالا `HEAD` در حالت معمول به `feature-profile` اشاره می‌کنه.
 
-«الان HEAD به feature-profile اشاره می‌کنه. از این به بعد Commitهایی که ایجاد می‌کنیم روی همین Branch ثبت می‌شن.»
+> روش کوتاه‌تر برای **ساخت و جابه‌جایی هم‌زمان**: `git switch -c new-feature`. این دستور رو فعلاً اجرا نکن؛ چون برای تمرین از `feature-profile` استفاده می‌کنیم.
 
-## یک نکته تکمیلی
+### 🧠 سؤال مفهومی
 
-برای ساخت و جابه‌جایی هم‌زمان می‌توانیم از دستور زیر استفاده کنیم:
+فرق این دو دستور چیه؟
 
 ```powershell
-git switch -c new-feature
+git branch feature-profile
+git switch feature-profile
 ```
 
-اما **این دستور را فعلاً اجرا نکنید**؛ چون سناریوی کلاس را با Branch دیگری پیچیده می‌کند.
+<details>
+<summary>نمایش پاسخ</summary>
 
-فقط توضیح بده که چنین امکانی وجود دارد.
+دستور اول Branch رو می‌سازه و دستور دوم به Branch موردنظر جابه‌جا می‌شه.
+
+</details>
 
 ---
 
-# ۸. ایجاد تغییر روی Branch جدید — دقیقه ۳۰ تا ۳۵
+# ۶. ویرایش فایل روی Branch جدید
 
-قبل از ویرایش:
-
-```powershell
-git status
-```
-
-باید Branch فعلی `feature-profile` باشد.
-
-## باز کردن فایل
+فایل رو باز کن:
 
 ```powershell
 notepad .\about-me.txt
 ```
 
-از دانشجوها بخواه در انتهای فایل این خط را اضافه کنند:
+در انتهای فایل این خط رو اضافه کن:
 
 ```text
 Git Skill: Branching
 ```
 
-با `Ctrl + S` ذخیره کنند.
+با `Ctrl + S` ذخیره کن.
 
-بعد به PowerShell برگردند.
-
-## بررسی وضعیت
+بررسی وضعیت:
 
 ```powershell
 git status
 ```
 
-خروجی نمونه:
+باید فایل `about-me.txt` به‌صورت `modified` در بخش `Changes not staged for commit` دیده بشه.
 
-```text
-On branch feature-profile
-
-Changes not staged for commit:
-        modified:   about-me.txt
-```
-
-## بررسی تغییر
+تغییر رو مشاهده کن:
 
 ```powershell
 git diff
 ```
 
-باید خط جدید دیده شود:
+بخشی از خروجی:
 
 ```diff
 +Git Skill: Branching
 ```
 
-**توضیح مدرس:**
-
-«این تغییر فعلاً فقط در Working Directory ماست. هنوز Commit نشده.»
-
 ---
 
-# ۹. ثبت Commit روی Branch جدید — دقیقه ۳۵ تا ۴۱
+# ۷. ثبت Commit روی Branch جدید
 
-## Stage کردن
+فایل رو Stage کن:
 
 ```powershell
 git add about-me.txt
 ```
 
-بررسی:
-
-```powershell
-git status
-```
-
-اکنون فایل باید در بخش `Changes to be committed` باشد.
-
-## مشاهده تغییر Staged
+تغییر Staged رو بررسی کن:
 
 ```powershell
 git diff --staged
 ```
 
-## ایجاد Commit
+حالا Commit بساز:
 
 ```powershell
 git commit -m "Add branching skill"
@@ -469,108 +280,48 @@ git commit -m "Add branching skill"
  1 file changed, 1 insertion(+)
 ```
 
-شناسه Commit در هر سیستم متفاوت است.
+شناسه Commit در سیستم هر نفر متفاوته.
 
-## بررسی History
+History و وضعیت رو بررسی کن:
 
 ```powershell
 git log --oneline
-```
-
-در بالای History باید Commit جدید را ببینیم.
-
-## بررسی وضعیت
-
-```powershell
 git status
 ```
 
-اگر همه چیز درست باشد:
-
-```text
-On branch feature-profile
-nothing to commit, working tree clean
-```
-
-### نکته مدرس
-
-به دانشجوها بگو:
-
-«الان یک Commit جدید روی feature-profile داریم. اما Branch اصلی هنوز به Commit قبلی اشاره می‌کنه.»
+الان Commit جدید روی `feature-profile` ثبت شده؛ اشاره‌گر `main` هنوز روی Commit قبلیه.
 
 ---
 
-# ۱۰. برگشت به Branch اصلی — دقیقه ۴۱ تا ۴۵
+# ۸. برگشت به Branch اصلی
 
-این بخش یکی از مهم‌ترین قسمت‌های کلاس است.
-
-## قبل از جابه‌جایی
-
-محتوای فایل را نشان بده:
+قبل از جابه‌جایی، محتوای فایل رو ببین:
 
 ```powershell
 Get-Content .\about-me.txt
 ```
 
-باید این خط وجود داشته باشد:
+باید `Git Skill: Branching` وجود داشته باشه.
 
-```text
-Git Skill: Branching
-```
-
-## برگشت به main
+حالا به Branch اصلی برگرد:
 
 ```powershell
 git switch main
 ```
 
-اگر Branch اصلی `master` است:
+اگر Branch اصلی تو `master` است، به‌جاش `git switch master` اجرا کن.
 
-```powershell
-git switch master
-```
-
-فقط یکی از این دو دستور را متناسب با نام واقعی Branch اجرا کنید.
-
-## بررسی Branch فعلی
-
-```powershell
-git branch
-```
-
-## بررسی فایل
+دوباره فایل رو بررسی کن:
 
 ```powershell
 Get-Content .\about-me.txt
 ```
 
-در سناریوی ما، خط زیر دیگر نباید وجود داشته باشد:
+در سناریوی تمرین، خط `Git Skill: Branching` دیگه داخل فایل Branch اصلی نیست.
 
-```text
-Git Skill: Branching
-```
+**آیا تغییر حذف شده؟ خیر!** این تغییر در Commit مربوط به `feature-profile` ذخیره شده.
 
-## اینجا چه بگویم؟
-
-«دقت کنید! ما فایل رو دستی تغییر ندادیم. فقط Branch رو عوض کردیم و Git محتوای Working Directory رو مطابق Commit مربوط به Branch جدید تنظیم کرد.»
-
-از دانشجوها بپرس:
-
-«آیا تغییر قبلی پاک شده؟»
-
-پاسخ:
-
-«خیر. تغییر در Commit مربوط به feature-profile ثبت شده و هنوز در History وجود داره.»
-
-## بررسی History
-
-```powershell
-git log --oneline
-```
-
-در `main`، Commit جدید feature-profile در History فعلی دیده نمی‌شود.
-
-اما با دستور زیر می‌توانیم Commitهای همه Branchهای محلی را مشاهده کنیم:
+برای دیدن History همه Branchهای محلی:
 
 ```powershell
 git log --oneline --graph --all --decorate
@@ -578,15 +329,11 @@ git log --oneline --graph --all --decorate
 
 ---
 
-# ۱۱. مفهوم Merge — دقیقه ۴۵ تا ۴۷
+# ۹. Merge چیست؟
 
-## Merge چیست؟
+**Merge** یعنی ادغام مسیر توسعه یک Branch در Branch فعلی.
 
-تعریف ساده:
-
-«Merge عملیاتی است که تغییرات یک مسیر توسعه را با مسیر دیگر ترکیب می‌کند.»
-
-در سناریوی ما می‌خواهیم Commit مربوط به `feature-profile` را وارد `main` کنیم.
+ما می‌خوایم تغییر `feature-profile` رو وارد `main` کنیم.
 
 قبل از Merge:
 
@@ -596,9 +343,9 @@ C1 --- C2 --- C3 --- F1
               main  feature-profile
 ```
 
-چون `main` از زمان ساخت Branch جدید جلو نرفته، Git می‌تواند اشاره‌گر `main` را مستقیماً به F1 منتقل کند.
+چون `main` از زمان جدا شدن Branch جدید جلو نرفته، Git می‌تونه **Fast-forward Merge** انجام بده.
 
-بعد از Fast-forward Merge:
+بعد از Merge:
 
 ```text
 C1 --- C2 --- C3 --- F1
@@ -606,23 +353,20 @@ C1 --- C2 --- C3 --- F1
              main, feature-profile
 ```
 
-**نکته علمی:** در Fast-forward Merge، Commit جدیدی مخصوص Merge ساخته نمی‌شود.
+در Fast-forward Merge، Commit جدید مخصوص Merge ساخته نمی‌شه؛ اشاره‌گر Branch مقصد جلو می‌ره.
 
 ---
 
-# ۱۲. انجام Merge — دقیقه ۴۷ تا ۵۱
+# ۱۰. انجام Merge
 
-## بررسی وضعیت
-
-ابتدا:
+ابتدا مطمئن شو روی `main` هستی:
 
 ```powershell
 git status
+git branch
 ```
 
-باید روی Branch اصلی باشیم و Working Directory تمیز باشد.
-
-## دستور Merge
+سپس:
 
 ```powershell
 git merge feature-profile
@@ -637,21 +381,19 @@ Fast-forward
  1 file changed, 1 insertion(+)
 ```
 
-شناسه‌ها نمونه هستند.
-
-## بررسی فایل
+حالا فایل رو ببین:
 
 ```powershell
 Get-Content .\about-me.txt
 ```
 
-حالا خط زیر باید دوباره وجود داشته باشد:
+خط زیر دوباره وجود داره:
 
 ```text
 Git Skill: Branching
 ```
 
-## بررسی History
+و History رو بررسی کن:
 
 ```powershell
 git log --oneline --graph --all --decorate
@@ -665,59 +407,39 @@ git log --oneline --graph --all --decorate
 * 123abcd Add my profile
 ```
 
-## چه چیزی بگویم؟
-
-«الان هر دو Branch به یک Commit اشاره می‌کنن. Merge موفق بود و تغییرات feature-profile وارد main شدن.»
-
-تأکید کن که خود Branch با Merge حذف نمی‌شود.
+**نکته:** Merge کردن، Branch مبدأ رو حذف نمی‌کنه.
 
 ---
 
-# ۱۳. حذف Branch بعد از Merge — بخش اختیاری
+# ۱۱. حذف Branch ادغام‌شده (اختیاری)
 
-اگر زمان کلاس کافی بود، می‌توانیم Branch ادغام‌شده را حذف کنیم.
-
-ابتدا مطمئن شو روی `main` هستیم:
-
-```powershell
-git branch
-```
-
-سپس:
+اگر Merge موفق بوده و روی `main` هستی:
 
 ```powershell
 git branch -d feature-profile
 ```
 
-خروجی نمونه:
+این دستور Branch محلی ادغام‌شده رو حذف می‌کنه، نه Commitهایی که از طریق `main` قابل دسترس هستن.
 
-```text
-Deleted branch feature-profile
-```
-
-**توضیح مهم:**
-
-«حذف Branch در این وضعیت به معنی حذف Commitهای ادغام‌شده نیست. چون Commit جدید اکنون از طریق main قابل دسترسه.»
-
-اگر دانشجو هنوز مفهوم Merge را خوب درک نکرده، این مرحله را به پایان کلاس موکول کن.
+> این مرحله اختیاریه. اگر می‌خوای Branch رو برای تمرین‌های بعدی نگه داری، اجراش نکن.
 
 ---
 
-# ۱۴. تمرین دانشجویان — دقیقه ۵۱ تا ۵۷
+# ۱۲. تمرین عملی
 
-از دانشجوها بخواه بدون نگاه کردن به مراحل قبلی، کارهای زیر را انجام دهند:
+حالا خودت همین Workflow رو با یک Branch جدید انجام بده:
 
-1. Branch فعلی را بررسی کنند.
-2. یک Branch جدید به نام `feature-hobby` بسازند.
-3. به آن جابه‌جا شوند.
-4. یک خط جدید به `about-me.txt` اضافه کنند.
-5. تغییر را Commit کنند.
-6. به Branch اصلی برگردند.
-7. نبودن تغییر جدید در فایل Branch اصلی را بررسی کنند.
-8. Branch جدید را Merge کنند.
-9. History نهایی را نمایش دهند.
+1. وضعیت Repository رو بررسی کن.
+2. Branch جدید `feature-hobby` بساز.
+3. به Branch جدید برو.
+4. فایل `about-me.txt` رو باز کن.
+5. خط `Hobby: Programming` رو اضافه و ذخیره کن.
+6. تغییر رو بررسی کن و Commit بزن.
+7. به Branch اصلی برگرد و محتوای فایل رو بررسی کن.
+8. Branch جدید رو Merge کن.
+9. History نهایی رو نمایش بده.
 
-## راهنمای دستورات برای مدرس
+دستورهای موردنیاز:
 
 ```powershell
 git status
@@ -726,13 +448,7 @@ git switch feature-hobby
 notepad .\about-me.txt
 ```
 
-خط پیشنهادی:
-
-```text
-Hobby: Programming
-```
-
-پس از ذخیره:
+بعد از ذخیره خط جدید:
 
 ```powershell
 git diff
@@ -744,256 +460,155 @@ git merge feature-hobby
 git log --oneline --graph --all --decorate
 ```
 
-اگر Branch اصلی `master` است، دستور برگشت را متناسب با آن تغییر بده.
+اگر Branch اصلی `master` است، در دستور برگشت نام اون رو جایگزین کن.
 
 ---
 
-# ۱۵. مشکلات رایج و روش رفع آن‌ها
+# ۱۳. Challenge — بدون نگاه به راهنما
 
-## مشکل اول: Not a Git Repository
+- یک Branch جدید با نام دلخواه بساز.
+- به اون جابه‌جا شو.
+- یک فایل Track شده رو ویرایش کن.
+- تغییر رو Commit کن.
+- به Branch اصلی برگرد.
+- بررسی کن تغییر جدید هنوز در Branch اصلی وجود نداره.
+- Branch جدید رو Merge کن.
+- History رو با نمودار نمایش بده.
 
-خطا:
+<details>
+<summary>نمایش راهنمای پاسخ</summary>
 
-```text
-fatal: not a git repository
+```powershell
+git branch my-feature
+git switch my-feature
+notepad .\about-me.txt
+git add about-me.txt
+git commit -m "Update profile"
+git switch main
+git merge my-feature
+git log --oneline --graph --all --decorate
 ```
 
-علت احتمالی:
+قبل از `git add`، فایل رو ویرایش و ذخیره کن. اگر Branch اصلی `master` است، از نام واقعی اون استفاده کن.
 
-دانشجو در پوشه اشتباه قرار دارد.
+</details>
 
-راهکار:
+---
+
+# ۱۴. مشکلات رایج
+
+### fatal: not a git repository
+
+احتمالاً در پوشه Repository نیستی:
 
 ```powershell
 Get-Location
 ```
 
-سپس وارد Repository صحیح شود.
+### a branch named 'feature-profile' already exists
 
-## مشکل دوم: Branch از قبل وجود دارد
-
-خطا:
-
-```text
-fatal: a branch named 'feature-profile' already exists
-```
-
-راهکار:
+این Branch قبلاً ساخته شده. ابتدا بررسی کن:
 
 ```powershell
 git branch
 ```
 
-اگر Branch وجود دارد، به‌جای ساخت دوباره، به آن جابه‌جا شو:
+اگر می‌خوای وارد همون Branch بشی:
 
 ```powershell
 git switch feature-profile
 ```
 
-## مشکل سوم: Branch موردنظر پیدا نمی‌شود
+### invalid reference: feature-profile
 
-خطا:
-
-```text
-fatal: invalid reference: feature-profile
-```
-
-راهکار:
+نام Branch رو بررسی کن:
 
 ```powershell
 git branch
 ```
 
-نام Branch را دقیق بررسی کن.
-
-## مشکل چهارم: Git اجازه Switch نمی‌دهد
-
-ممکن است خطایی درباره تغییرات محلی نمایش داده شود.
+### موقع Switch خطای تغییرات محلی می‌گیرم
 
 ابتدا:
 
 ```powershell
 git status
-```
-
-سپس:
-
-```powershell
 git diff
 ```
 
-**نکته مدرس:** بدون بررسی، تغییرات دانشجو را حذف نکن.
+بدون بررسی، تغییرات رو حذف نکن. ممکنه لازم باشه تغییرات مهم رو ابتدا Commit کنی.
 
-اگر تغییرات مهم هستند، باید درباره Commit کردن یا نگهداری آن‌ها تصمیم بگیریم.
+### nothing to commit
 
-## مشکل پنجم: Nothing to Commit
-
-خروجی:
-
-```text
-nothing to commit, working tree clean
-```
-
-اگر انتظار Commit جدید داریم:
-
-1. بررسی کن فایل واقعاً ویرایش شده باشد.
-2. مطمئن شو با `Ctrl + S` ذخیره شده.
-3. دستور `git status` را اجرا کن.
-4. محتوای فایل را بررسی کن.
+مطمئن شو فایل ویرایش و ذخیره شده:
 
 ```powershell
 Get-Content .\about-me.txt
+git status
 ```
 
-## مشکل ششم: Git می‌گوید Already up to date
+### Already up to date
 
-خروجی:
-
-```text
-Already up to date.
-```
-
-این پیام لزوماً خطا نیست.
-
-ممکن است تغییرات Branch قبلاً Merge شده باشند یا Branch موردنظر Commit جدیدی برای وارد کردن نداشته باشد.
-
-بررسی:
+این پیام لزوماً خطا نیست؛ ممکنه تغییرات Branch قبلاً ادغام شده باشن یا Commit جدیدی برای Merge وجود نداشته باشه.
 
 ```powershell
 git log --oneline --graph --all --decorate
 ```
 
-## مشکل هفتم: Merge به‌جای Fast-forward مسیر دیگری دارد
+### Merge Conflict
 
-اگر دانشجو روی Branch اصلی هم Commit جدید ساخته باشد، ممکن است وضعیت History با سناریوی کلاس متفاوت شود.
-
-در این حالت بدون بررسی History، دستورهای جدید اجرا نکن.
-
-ابتدا:
+در این جلسه سناریو طوری طراحی شده که Fast-forward Merge داشته باشیم. اگر Conflict رخ داد، قبل از اجرای دستورهای بیشتر، وضعیت و History رو بررسی کن:
 
 ```powershell
 git status
 git log --oneline --graph --all --decorate
 ```
 
-اگر Merge Conflict رخ داد، وضعیت را بررسی کن. در صورت مناسب بودن شرایط و برای لغو Merge در حال انجام:
-
-```powershell
-git merge --abort
-```
-
-سپس مسئله را جداگانه بررسی کن.
+حل Conflict رو در جلسه پنجم یاد می‌گیریم.
 
 ---
 
-# ۱۶. سؤال‌های مفهومی پایان کلاس
-
-## سؤال ۱
-
-آیا ساخت Branch جدید باعث ایجاد Commit جدید می‌شود؟
-
-**پاسخ:** خیر. Branch جدید ابتدا به Commit موجود اشاره می‌کند.
-
-## سؤال ۲
-
-آیا دستور `git branch feature-profile` ما را به Branch جدید منتقل می‌کند؟
-
-**پاسخ:** خیر. فقط Branch را می‌سازد.
-
-## سؤال ۳
-
-برای جابه‌جایی بین Branchها از چه دستوری استفاده می‌کنیم؟
-
-**پاسخ:**
-
-```powershell
-git switch feature-profile
-```
-
-## سؤال ۴
-
-اگر روی Branch جدید Commit بزنیم، آیا اشاره‌گر main هم جلو می‌رود؟
-
-**پاسخ:** خیر. در سناریوی معمول، فقط اشاره‌گر Branch فعلی جلو می‌رود.
-
-## سؤال ۵
-
-آیا Merge همیشه Commit جدید ایجاد می‌کند؟
-
-**پاسخ:** خیر. در Fast-forward Merge معمولاً فقط اشاره‌گر Branch مقصد جلو می‌رود.
-
-## سؤال ۶
-
-آیا Merge کردن، Branch مبدأ را حذف می‌کند؟
-
-**پاسخ:** خیر. حذف Branch یک عملیات جداگانه است.
-
----
-
-# ۱۷. Cheat Sheet مخصوص مدرس
+# ۱۵. Cheat Sheet
 
 | هدف | دستور |
 |---|---|
-| بررسی وضعیت | `git status` |
 | مشاهده Branchها | `git branch` |
 | ساخت Branch | `git branch feature-profile` |
 | جابه‌جایی | `git switch feature-profile` |
 | ساخت و جابه‌جایی هم‌زمان | `git switch -c new-feature` |
-| نمایش تغییرات | `git diff` |
+| بررسی تغییرات | `git diff` |
 | Stage کردن | `git add about-me.txt` |
-| ایجاد Commit | `git commit -m "Add branching skill"` |
+| ثبت Commit | `git commit -m "Add branching skill"` |
 | برگشت به Branch اصلی | `git switch main` |
-| Merge کردن | `git merge feature-profile` |
-| مشاهده گراف History | `git log --oneline --graph --all --decorate` |
+| Merge | `git merge feature-profile` |
+| مشاهده نمودار History | `git log --oneline --graph --all --decorate` |
 | حذف Branch ادغام‌شده | `git branch -d feature-profile` |
 
 ---
 
-# ۱۸. جمع‌بندی نهایی — دقیقه ۵۷ تا ۶۰
+# جمع‌بندی
 
-## متن پیشنهادی برای پایان کلاس
+در این جلسه یاد گرفتیم:
 
-«امروز یاد گرفتیم Git فقط برای ذخیره نسخه‌های قبلی نیست. ما می‌تونیم با Branchها مسیرهای توسعه جداگانه داشته باشیم.»
-
-«یاد گرفتیم Branch جدید بسازیم، بین Branchها جابه‌جا بشیم، روی یک Branch تغییر ثبت کنیم و در نهایت با Merge تغییرات رو وارد Branch اصلی کنیم.»
-
-«در پروژه‌های واقعی، این قابلیت کمک می‌کنه چند نفر یا حتی یک نفر روی قابلیت‌های مختلف کار کنن، بدون اینکه مجبور باشن تمام تغییرات رو مستقیم روی Branch اصلی ثبت کنن.»
-
-## مهم‌ترین مفاهیم جلسه
-
-- Branch
-- Commit
-- HEAD
-- git branch
-- git switch
-- git merge
-- Fast-forward Merge
+- Branch مسیر جداگانه‌ای برای توسعه فراهم می‌کنه.
+- ساخت Branch با جابه‌جایی به اون فرق داره.
+- Commit جدید روی Branch فعلی ثبت می‌شه.
+- با جابه‌جایی بین Branchها، فایل‌های Working Directory ممکنه تغییر کنن.
+- Merge تغییرات یک Branch رو وارد Branch فعلی می‌کنه.
+- در Fast-forward Merge، Merge Commit جدید ساخته نمی‌شه.
 
 ## جلسه بعد
 
 **Session 04 — GitHub & Remote Repository**
 
-در جلسه چهارم یاد می‌گیریم:
-
-- Remote Repository چیست؟
-- تفاوت Local Repository و Remote Repository چیست؟
-- چطور پروژه را به GitHub متصل کنیم؟
-- چطور تغییرات را Push کنیم؟
-- چطور Repository را Clone کنیم؟
-- تفاوت Push، Pull و Fetch چیست؟
+در جلسه چهارم با Remote Repository، Clone، Push، Pull و Fetch آشنا می‌شیم.
 
 ---
 
-# ۱۹. چک‌لیست مدرس قبل از کلاس
+# منابع
 
-- [ ] Git روی لپ‌تاپ نصب باشد.
-- [ ] Repository جلسات قبلی وجود داشته باشد.
-- [ ] فایل `about-me.txt` موجود باشد.
-- [ ] وضعیت Repository تمیز باشد.
-- [ ] نام Branch اصلی مشخص باشد.
-- [ ] Branch تمرینی `feature-profile` از قبل وجود نداشته باشد.
-- [ ] سناریوی Commit و Merge یک بار آزمایش شده باشد.
-- [ ] خروجی‌های نمونه برای نمایش آماده باشند.
-- [ ] برای دانشجوهایی که جلسه قبل غایب بودند، یک Repository تمرینی آماده باشد.
-
-**نکته نهایی:** هدف اصلی جلسه سوم این نیست که دانشجو تعداد زیادی دستور حفظ کند. هدف این است که بفهمد Branch چگونه به او اجازه می‌دهد روی مسیر مستقلی کار کند و بعد تغییرات آن را وارد Branch اصلی کند.
+- [Pro Git — Git Branching](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell)
+- [Git — git-branch](https://git-scm.com/docs/git-branch)
+- [Git — git-switch](https://git-scm.com/docs/git-switch)
+- [Git — git-merge](https://git-scm.com/docs/git-merge)
+- [Git — git-log](https://git-scm.com/docs/git-log)
