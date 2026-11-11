@@ -1,3 +1,4 @@
+
 # Version Control with Git & GitHub
 
 یک دوره‌ی ساده، عملی و قدم‌به‌قدم برای یادگیری کنترل نسخه با Git و GitHub.
@@ -100,17 +101,25 @@ Basic Undo
 Branching & Merging
 ```
 
-یاد می‌گیریم بدون آسیب زدن به نسخه اصلی پروژه، روی تغییرات جدید کار کنیم.
+در این جلسه یاد می‌گیریم چطور با استفاده از Branch روی قابلیت‌های جدید پروژه کار کنیم، بدون اینکه مستقیماً Branch اصلی رو تغییر بدیم.
+
+همچنین یاد می‌گیریم چطور تغییرات رو روی Branch جدید Commit کنیم و در نهایت با Merge اون‌ها رو وارد Branch اصلی کنیم.
 
 موضوعات اصلی:
 
 ```text
 Branch
+Commit vs Branch
+HEAD
 git branch
 git switch
-Merge
+git switch -c
 git merge
+Fast-forward Merge
+git log --oneline --graph --all --decorate
 ```
+
+### [ورود به جلسه ۳](./sessions/session-03/)
 
 ---
 
@@ -252,7 +261,9 @@ Create Pull Request
 Pro Git
 ```
 
-کتاب رسمی Git
+کتاب رسمی و رایگان Git
+
+[مطالعه کتاب Pro Git](https://git-scm.com/book/en/v2)
 
 ```text
 Git Documentation
@@ -260,11 +271,15 @@ Git Documentation
 
 مستندات رسمی Git
 
+[مشاهده مستندات Git](https://git-scm.com/docs)
+
 ```text
 GitHub Documentation
 ```
 
 مستندات رسمی GitHub
+
+[مشاهده مستندات GitHub](https://docs.github.com/)
 
 ```text
 Google - Introduction to Git and GitHub
@@ -272,12 +287,16 @@ Google - Introduction to Git and GitHub
 
 دوره مقدماتی Google در Coursera
 
+[مشاهده دوره در Coursera](https://www.coursera.org/learn/introduction-git-github)
+
 ---
 
 # شروع دوره
 
-برای شروع:
+برای شروع، جلسات رو به‌ترتیب دنبال کن:
 
 ### [جلسه ۱ — Version Control & Git Basics](./sessions/session-01/)
 
 ### [جلسه ۲ — Git History, Diff & Basic Undo](./sessions/session-02/)
+
+### [جلسه ۳ — Git Branching & Merging](./sessions/session-03/)
