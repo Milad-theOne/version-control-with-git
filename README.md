@@ -1,7 +1,7 @@
 
 # Version Control with Git & GitHub
 
-یک دوره‌ی ساده، عملی و قدم‌به‌قدم برای یادگیری کنترل نسخه با Git و GitHub.
+یک دوره ساده، عملی و قدم‌به‌قدم برای یادگیری کنترل نسخه با Git و GitHub.
 
 هدف این دوره فقط حفظ کردن چند دستور نیست.
 
@@ -20,7 +20,7 @@ Version Control
      Git
       |
       v
-Repository
+ Repository
       |
       v
 Commit & History
@@ -35,7 +35,7 @@ GitHub & Remote
 Collaboration
       |
       v
-Pull Request
+ Pull Request
 ```
 
 ---
@@ -50,7 +50,7 @@ Version Control & Git Basics
 
 در این جلسه با مفهوم کنترل نسخه آشنا می‌شیم و اولین Repository و Commit خودمون رو می‌سازیم.
 
-موضوعات اصلی:
+### موضوعات اصلی
 
 ```text
 Version Control
@@ -66,6 +66,8 @@ git commit
 git log --oneline
 ```
 
+**وضعیت:** برگزارشده و منتشرشده
+
 ### [ورود به جلسه ۱](./sessions/session-01/)
 
 ---
@@ -76,7 +78,9 @@ git log --oneline
 History, Diff & Undo
 ```
 
-موضوعات اصلی:
+در این جلسه یاد می‌گیریم چطور تاریخچه تغییرات رو مشاهده کنیم، تفاوت نسخه‌های مختلف فایل‌ها رو بررسی کنیم و بعضی اشتباهات ساده رو اصلاح کنیم.
+
+### موضوعات اصلی
 
 ```text
 git log
@@ -90,6 +94,8 @@ Commit History
 Comparing Changes
 Basic Undo
 ```
+
+**وضعیت:** برگزارشده و منتشرشده
 
 ### [ورود به جلسه ۲](./sessions/session-02/)
 
@@ -105,7 +111,7 @@ Branching & Merging
 
 همچنین یاد می‌گیریم چطور تغییرات رو روی Branch جدید Commit کنیم و در نهایت با Merge اون‌ها رو وارد Branch اصلی کنیم.
 
-موضوعات اصلی:
+### موضوعات اصلی
 
 ```text
 Branch
@@ -119,49 +125,83 @@ Fast-forward Merge
 git log --oneline --graph --all --decorate
 ```
 
+**وضعیت:** برگزارشده و منتشرشده
+
 ### [ورود به جلسه ۳](./sessions/session-03/)
 
 ---
 
-## جلسه ۴ — GitHub و Remote Repository
+## جلسه ۴ — GitHub و اتصال Repository
 
 ```text
-GitHub & Remote
+GitHub & Remote Repository
 ```
 
-پروژه Local رو به GitHub متصل می‌کنیم.
+تا این جلسه تمام فعالیت‌های ما روی کامپیوتر خودمون انجام می‌شدن.
 
-موضوعات اصلی:
+در جلسه چهارم یاد می‌گیریم چطور پروژه محلی رو به GitHub متصل کنیم و Commitهای پروژه رو برای اولین بار روی GitHub منتشر کنیم.
+
+همچنین تفاوت Git و GitHub و مفهوم مخزن محلی و مخزن راه دور رو بررسی می‌کنیم.
+
+### موضوعات اصلی
 
 ```text
+Git vs GitHub
+Local Repository
 Remote Repository
-git remote
-git clone
+Remote
+origin
+HTTPS Repository URL
+git remote -v
+git remote add origin URL
+git push -u origin main
 git push
-git pull
-git fetch
+Upstream
 ```
+
+### مهارت‌های عملی
+
+در پایان این جلسه می‌تونیم:
+
+- یک Repository خالی در GitHub ایجاد کنیم.
+- آدرس Repository آنلاین رو دریافت کنیم.
+- Repository محلی رو به GitHub متصل کنیم.
+- اتصال ایجادشده رو بررسی کنیم.
+- اولین Push رو انجام بدیم.
+- فایل‌ها و Commitهای پروژه رو در GitHub مشاهده کنیم.
+
+**وضعیت:** برگزارشده
+
+### [ورود به جلسه ۴](./sessions/session-04/)
 
 ---
 
-## جلسه ۵ — کار تیمی و Conflict
+## جلسه ۵ — دریافت پروژه و همکاری تیمی
 
 ```text
-Collaboration & Merge Conflicts
+Clone, Fetch, Pull & Collaboration
 ```
 
-یاد می‌گیریم چند نفر چطور روی یک Repository کار کنن و Conflictهای ساده رو حل کنن.
+در این جلسه یاد می‌گیریم چطور یک Repository موجود رو از GitHub روی سیستم خودمون دریافت کنیم.
 
-موضوعات اصلی:
+همچنین بررسی می‌کنیم چطور تغییرات جدید مخزن راه دور رو دریافت کنیم و پروژه محلی رو با اون هماهنگ نگه داریم.
+
+در ادامه با مفاهیم اولیه همکاری تیمی آشنا می‌شیم.
+
+### موضوعات برنامه‌ریزی‌شده
 
 ```text
-Collaboration
+git clone
+git fetch
+git pull
+Remote-tracking Branch
 Sync
-Push
-Pull
+Collaboration
 Merge Conflict
 Conflict Resolution
 ```
+
+**وضعیت:** در برنامه آموزشی
 
 ---
 
@@ -173,7 +213,9 @@ Pull Request & Code Review
 
 در جلسه آخر با Workflow رایج تیم‌های نرم‌افزاری آشنا می‌شیم.
 
-موضوعات اصلی:
+یاد می‌گیریم چطور تغییرات یک Branch رو برای بررسی به دیگران پیشنهاد بدیم و بعد از بررسی، اون‌ها رو وارد Branch اصلی کنیم.
+
+### موضوعات برنامه‌ریزی‌شده
 
 ```text
 Branch
@@ -182,9 +224,12 @@ Push
 Pull Request
 Code Review
 Merge
+Collaboration Workflow
 ```
 
 در پایان دوره یک Workflow واقعی GitHub رو از ابتدا تا انتها انجام می‌دیم.
+
+**وضعیت:** در برنامه آموزشی
 
 ---
 
@@ -195,19 +240,19 @@ Merge
 هر جلسه شامل این بخش‌هاست:
 
 ```text
-Concept
-   |
-   v
-Example
-   |
-   v
+  Concept
+     |
+     v
+  Example
+     |
+     v
 Live Practice
-   |
-   v
-Questions
-   |
-   v
-Challenge
+     |
+     v
+ Questions
+     |
+     v
+ Challenge
 ```
 
 قرار نیست فقط Commandها رو حفظ کنیم.
@@ -239,10 +284,10 @@ Merge Changes
 Connect to GitHub
       |
       v
-Push / Pull
+ Push / Pull
       |
       v
-Collaborate
+ Collaborate
       |
       v
 Resolve Conflict
@@ -251,41 +296,51 @@ Resolve Conflict
 Create Pull Request
 ```
 
+این تمرین به ما کمک می‌کنه مطالب دوره رو در یک پروژه واقعی کنار هم استفاده کنیم.
+
 ---
 
 # منابع
 
-برای طراحی محتوای دوره از منابع معتبر زیر استفاده می‌شه:
+برای طراحی محتوای دوره از منابع معتبر زیر استفاده می‌شه.
+
+## کتاب Pro Git
 
 ```text
 Pro Git
 ```
 
-کتاب رسمی و رایگان Git
+کتاب رسمی و رایگان Git.
 
 [مطالعه کتاب Pro Git](https://git-scm.com/book/en/v2)
+
+## مستندات رسمی Git
 
 ```text
 Git Documentation
 ```
 
-مستندات رسمی Git
+مرجع رسمی دستورات و قابلیت‌های Git.
 
 [مشاهده مستندات Git](https://git-scm.com/docs)
+
+## مستندات رسمی GitHub
 
 ```text
 GitHub Documentation
 ```
 
-مستندات رسمی GitHub
+راهنمای رسمی استفاده از GitHub و قابلیت‌های همکاری تیمی.
 
 [مشاهده مستندات GitHub](https://docs.github.com/)
+
+## دوره مقدماتی Google
 
 ```text
 Google - Introduction to Git and GitHub
 ```
 
-دوره مقدماتی Google در Coursera
+دوره مقدماتی Google در Coursera.
 
 [مشاهده دوره در Coursera](https://www.coursera.org/learn/introduction-git-github)
 
@@ -293,10 +348,18 @@ Google - Introduction to Git and GitHub
 
 # شروع دوره
 
-برای شروع، جلسات رو به‌ترتیب دنبال کن:
+برای شروع، جلسات رو به‌ترتیب دنبال کن.
 
 ### [جلسه ۱ — Version Control & Git Basics](./sessions/session-01/)
 
 ### [جلسه ۲ — Git History, Diff & Basic Undo](./sessions/session-02/)
 
 ### [جلسه ۳ — Git Branching & Merging](./sessions/session-03/)
+
+### [جلسه ۴ — GitHub & Remote Repository](./sessions/session-04/)
+
+---
+
+**Version Control with Git & GitHub**
+
+یادگیری قدم‌به‌قدم Git، از اولین Commit تا همکاری روی پروژه‌های واقعی.
